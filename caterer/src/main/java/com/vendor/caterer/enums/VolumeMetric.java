@@ -1,4 +1,4 @@
-package com.vendor.caterer;
+package com.vendor.caterer.enums;
 
 public enum VolumeMetric {
     LITRE,

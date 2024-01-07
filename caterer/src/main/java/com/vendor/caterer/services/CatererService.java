@@ -1,11 +1,21 @@
 package com.vendor.caterer.services;
 
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import com.vendor.caterer.dao.CatererRepository;
 import com.vendor.caterer.dto.CatererCreateRequest;
 import com.vendor.caterer.dto.CatererUpdateRequest;
+import com.vendor.caterer.dto.SearchRequest;
+import com.vendor.caterer.helper.EsHelper;
 import com.vendor.caterer.model.Caterer;
+import com.vendor.caterer.model.Pagination;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.client.elc.NativeQuery;
+import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,26 +29,27 @@ import java.util.UUID;
 public class CatererService {
     @Autowired
     private CatererRepository dao;
-    private static final ModelMapper MODEL_MAPPER = new ModelMapper();
-
+    @Autowired
+    private EsHelper esHelper;
+    @Autowired
+    private ElasticsearchOperations elasticsearchOperations;
     public ResponseEntity<Caterer> saveCaterer(CatererCreateRequest createRequest) {
-        //createRequest.getItems().forEach(menuItem -> menuItem.setId(UUID.randomUUID()));
-        Caterer restaurant = convertCreateRequestModelToDocModel(createRequest);
-        dao.save(restaurant);
-        return ResponseEntity.status(HttpStatus.CREATED).body(restaurant);
+        Caterer caterer = convertCreateRequestModelToDocModel(createRequest);
+        dao.save(caterer);
+        return ResponseEntity.status(HttpStatus.CREATED).body(caterer);
     }
 
     private Caterer convertCreateRequestModelToDocModel(CatererCreateRequest createRequest) {
-       // Caterer caterer =  MODEL_MAPPER.map(createRequest, Caterer.class);
-        Caterer caterer = new Caterer(createRequest);
-        UUID catererId = UUID.randomUUID();
-        caterer.setId(catererId);
-        if (Objects.isNull(createRequest.getBranchId())) {
+       ModelMapper mapCreateRequestToEntity = new ModelMapper();
+       Caterer caterer =  mapCreateRequestToEntity.map(createRequest, Caterer.class);
+       UUID catererId = UUID.randomUUID();
+       caterer.setId(catererId);
+       if (Objects.isNull(createRequest.getBranchId())) {
             caterer.setBranchId(catererId);
-        }
-        caterer.setCreatedOn(LocalDateTime.now().toString());
-        caterer.setLastUpdated(LocalDateTime.now().toString());
-        return caterer;
+       }
+       caterer.setCreatedOn(LocalDateTime.now().toString());
+       caterer.setLastUpdated(LocalDateTime.now().toString());
+       return caterer;
     }
 
     private Caterer convertUpdateRequestModelToDocModel(Caterer caterer,CatererUpdateRequest catererUpdateRequest) {
@@ -56,16 +67,17 @@ public class CatererService {
 
     public ResponseEntity<Caterer> getCaterer(UUID id){
         Optional<Caterer> restaurant = dao.findById(id);
-        return restaurant.map(caterer -> ResponseEntity.status(HttpStatus.ACCEPTED).body(caterer)).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return restaurant.map(caterer -> ResponseEntity.status(HttpStatus.ACCEPTED).body(caterer))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     public ResponseEntity<Caterer> updateCaterer(UUID id, CatererUpdateRequest updateRequest) {
         Optional<Caterer> caterer = dao.findById(id);
 
         if (caterer.isPresent()) {
-            Caterer restaurant = convertUpdateRequestModelToDocModel(caterer.get(),updateRequest);
-            dao.save(restaurant);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(restaurant);
+            Caterer updatedCaterer = convertUpdateRequestModelToDocModel(caterer.get(),updateRequest);
+            dao.save(updatedCaterer);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(updatedCaterer);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -80,4 +92,15 @@ public class CatererService {
         }
     }
 
+    public Pagination<Caterer> getCaterers(SearchRequest searchRequest) {
+        Query query = esHelper.getEsQuery(searchRequest.getNode());
+        NativeQuery nativeQuery = new NativeQuery(new NativeQueryBuilder().withQuery(query));
+        nativeQuery.setPageable(PageRequest.of(searchRequest.getOffset(), searchRequest.getLimit()));
+        SearchHits<Caterer> searchHits = elasticsearchOperations.search(nativeQuery, Caterer.class);
+        Pagination<Caterer> pagination = new Pagination<>();
+        pagination.setData(searchHits.getSearchHits().stream().map(SearchHit::getContent).toList());
+        pagination.setReturnedCount(searchHits.getTotalHits());
+        pagination.setLimit(searchRequest.getLimit());
+        return  pagination;
+    }
 }
