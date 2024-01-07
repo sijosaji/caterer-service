@@ -2,7 +2,9 @@ package com.vendor.caterer.interfaces;
 
 import com.vendor.caterer.dto.CatererCreateRequest;
 import com.vendor.caterer.dto.CatererUpdateRequest;
+import com.vendor.caterer.dto.SearchRequest;
 import com.vendor.caterer.model.Caterer;
+import com.vendor.caterer.model.Pagination;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,4 +24,6 @@ public interface CatererResource {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteCaterer(@PathVariable UUID id);
+    @PostMapping("search")
+    Pagination<Caterer> getCaterers(@RequestBody SearchRequest searchRequest);
 }

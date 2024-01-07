@@ -1,6 +1,6 @@
 package com.vendor.caterer.model;
 
-import com.vendor.caterer.VolumeMetric;
+import com.vendor.caterer.enums.VolumeMetric;
 import lombok.Data;
 
 import java.util.Map;

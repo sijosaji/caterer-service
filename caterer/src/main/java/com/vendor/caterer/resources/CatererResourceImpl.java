@@ -2,8 +2,11 @@ package com.vendor.caterer.resources;
 
 import com.vendor.caterer.dto.CatererCreateRequest;
 import com.vendor.caterer.dto.CatererUpdateRequest;
+import com.vendor.caterer.dto.SearchRequest;
 import com.vendor.caterer.interfaces.CatererResource;
 import com.vendor.caterer.model.Caterer;
+import com.vendor.caterer.model.Node;
+import com.vendor.caterer.model.Pagination;
 import com.vendor.caterer.services.CatererService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,4 +37,10 @@ public class CatererResourceImpl implements CatererResource {
     public ResponseEntity<Void> deleteCaterer(UUID id) {
         return catererService.deleteCaterer(id);
     }
+
+    @Override
+    public Pagination<Caterer> getCaterers(SearchRequest searchRequest) {
+        return catererService.getCaterers(searchRequest);
+    }
+
 }

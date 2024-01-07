@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Data
 public class CatererCreateRequest {
-
+    private UUID id;
     @NotEmpty(message = "Name must be provided")
     private String name;
 
