@@ -97,10 +97,7 @@ public class CatererService {
         NativeQuery nativeQuery = new NativeQuery(new NativeQueryBuilder().withQuery(query));
         nativeQuery.setPageable(PageRequest.of(searchRequest.getOffset(), searchRequest.getLimit()));
         SearchHits<Caterer> searchHits = elasticsearchOperations.search(nativeQuery, Caterer.class);
-        Pagination<Caterer> pagination = new Pagination<>();
-        pagination.setData(searchHits.getSearchHits().stream().map(SearchHit::getContent).toList());
-        pagination.setReturnedCount(searchHits.getTotalHits());
-        pagination.setLimit(searchRequest.getLimit());
-        return  pagination;
+        return Pagination.<Caterer>builder().data(searchHits.getSearchHits().stream().map(SearchHit::getContent).toList())
+                 .returnedCount(searchHits.getTotalHits()).limit(searchRequest.getLimit()).build();
     }
 }
