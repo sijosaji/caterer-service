@@ -5,7 +5,6 @@ import com.vendor.caterer.dto.CatererUpdateRequest;
 import com.vendor.caterer.dto.SearchRequest;
 import com.vendor.caterer.interfaces.CatererResource;
 import com.vendor.caterer.model.Caterer;
-import com.vendor.caterer.model.Node;
 import com.vendor.caterer.model.Pagination;
 import com.vendor.caterer.services.CatererService;
 import org.springframework.beans.factory.annotation.Autowired;
