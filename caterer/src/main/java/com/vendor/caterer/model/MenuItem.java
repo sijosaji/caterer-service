@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.UUID;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = FoodItem.class, name = "food"),
+        @JsonSubTypes.Type(value = FoodItem2.class, name = "food"),
         @JsonSubTypes.Type(value = DrinksItem.class, name = "drink")
 })
 @Data
