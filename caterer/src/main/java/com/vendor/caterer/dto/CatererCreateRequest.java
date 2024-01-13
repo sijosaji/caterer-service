@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @Data
 public class CatererCreateRequest {
-    private UUID id;
     @NotEmpty(message = "Name must be provided")
     private String name;
 
@@ -21,7 +20,7 @@ public class CatererCreateRequest {
     @Pattern(regexp = "^\\+91\\d{10}$", message = "The provided Phone Number is invalid.")
     private String phoneNumber;
 
-    private URI website;
+    private String website;
     @Email
     @NotEmpty(message = "Email Id must be provided.")
     private String emailId;

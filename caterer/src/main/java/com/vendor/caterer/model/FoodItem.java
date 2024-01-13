@@ -9,19 +9,14 @@ import java.util.UUID;
 
 @Document(indexName = "food-item")
 public class FoodItem {
-
     private UUID id;
     private String name;
     private String description;
     private BigDecimal price;
-    private Cuisine cuisine;  // Enum for cuisine type
-    private List<String> ingredients;
     private boolean isVeg;
+    private boolean isDrink;
     private String imageUrl;
-
-    private List<Tags> tags;// Tags associated with this Food item.
-
-    private UUID catererId;
-    private Set<CategoryType> categories;
-    private UUID packageId;
+    private List<String> tags;
+    private Set<UUID> categoryIds;
+    private Set<UUID> packageCategoryIds;
 }
