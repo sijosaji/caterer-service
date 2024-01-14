@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode
+
+### Custom ###
+*.xml
+!pom.xml
+
+.idea/
+

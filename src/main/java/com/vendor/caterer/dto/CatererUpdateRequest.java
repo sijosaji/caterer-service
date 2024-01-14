@@ -15,7 +15,7 @@ public class CatererUpdateRequest {
     private String name;
     private UUID branchId;
     private String phoneNumber;
-    private URI website;
+    private String website;
     @Email
     private String emailId;
     private Location catererLocation;

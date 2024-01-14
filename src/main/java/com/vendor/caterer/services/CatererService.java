@@ -6,9 +6,9 @@ import com.vendor.caterer.dto.CatererCreateRequest;
 import com.vendor.caterer.dto.CatererUpdateRequest;
 import com.vendor.caterer.dto.SearchRequest;
 import com.vendor.caterer.helper.EsHelper;
+import com.vendor.caterer.interfaces.CatererMapper;
 import com.vendor.caterer.model.Caterer;
 import com.vendor.caterer.model.Pagination;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
@@ -40,8 +40,8 @@ public class CatererService {
     }
 
     private Caterer convertCreateRequestModelToDocModel(CatererCreateRequest createRequest) {
-       ModelMapper mapCreateRequestToEntity = new ModelMapper();
-       Caterer caterer =  mapCreateRequestToEntity.map(createRequest, Caterer.class);
+        Caterer caterer = CatererMapper.mapper.mapCreateRequestToModel(createRequest);
+
        UUID catererId = UUID.randomUUID();
        caterer.setId(catererId);
        if (Objects.isNull(createRequest.getBranchId())) {
@@ -53,16 +53,13 @@ public class CatererService {
     }
 
     private Caterer convertUpdateRequestModelToDocModel(Caterer caterer,CatererUpdateRequest catererUpdateRequest) {
-        //TODO: CHANGE THIS TO MODEL_MAPPER IN FUTURE
-        caterer.setName(catererUpdateRequest.getName());
-        caterer.setBranchId(catererUpdateRequest.getBranchId());
-        caterer.setPhoneNumber(catererUpdateRequest.getPhoneNumber());
-        caterer.setWebsite(catererUpdateRequest.getWebsite().toString());
-        caterer.setEmailId(catererUpdateRequest.getEmailId());
-        caterer.setCatererLocation(catererUpdateRequest.getCatererLocation());
-        caterer.setLastUpdated(LocalDateTime.now().toString());
-        caterer.setAddress(catererUpdateRequest.getAddress());
-        return caterer;
+        Caterer updatedCaterer = CatererMapper.mapper.mapUpdateRequestToModel(catererUpdateRequest,caterer);
+
+        if (Objects.isNull(catererUpdateRequest.getBranchId())) {
+            updatedCaterer.setBranchId(updatedCaterer.getId());
+        }
+        updatedCaterer.setLastUpdated(LocalDateTime.now().toString());
+        return updatedCaterer;
     }
 
     public ResponseEntity<Caterer> getCaterer(UUID id){
@@ -77,7 +74,7 @@ public class CatererService {
         if (caterer.isPresent()) {
             Caterer updatedCaterer = convertUpdateRequestModelToDocModel(caterer.get(),updateRequest);
             dao.save(updatedCaterer);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(updatedCaterer);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedCaterer);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
