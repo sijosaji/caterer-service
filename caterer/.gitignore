@@ -37,5 +37,5 @@ build/
 !pom.xml
 
 # IntelliJ IDEA
-.idea/
+../.idea/
 
