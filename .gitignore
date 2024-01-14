@@ -36,5 +36,5 @@ build/
 *.xml
 !pom.xml
 
-
+.idea/
 
