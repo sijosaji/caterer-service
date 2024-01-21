@@ -1,10 +1,14 @@
 package com.vendor.caterer.model;
 
+import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
+@Data
+@Document(collection = "package")
 public class Package {
 
     private UUID id;
@@ -13,4 +17,6 @@ public class Package {
     private UUID catererId;
     private int minimumOrderQuantity; // Minimum number of people required to offer this package.
     private boolean isAvailable;
+    private String createdOn;
+    private String lastUpdated;
 }
