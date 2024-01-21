@@ -1,13 +1,10 @@
 package com.vendor.caterer.interfaces;
 
-import com.vendor.caterer.dto.CategoryCreateRequest;
-import com.vendor.caterer.dto.CategoryUpdateRequest;
+import com.vendor.caterer.constants.Constants;
 import com.vendor.caterer.dto.PackageCreateRequest;
 import com.vendor.caterer.dto.PackageUpdateRequest;
-import com.vendor.caterer.model.Category;
 import com.vendor.caterer.model.Package;
 import com.vendor.caterer.model.Pagination;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +26,6 @@ public interface PackageResource {
     ResponseEntity<Void> deletePackage(@PathVariable UUID id);
 
     @GetMapping
-    ResponseEntity<Pagination<Package>> getAllPackages(@RequestParam(value = "page", defaultValue = "0") int page,
-                                                 @RequestParam(value = "size", defaultValue = "10") int size);
+    ResponseEntity<Pagination<Package>> getAllPackages(@RequestParam(value = "page", defaultValue = Constants.DEFAULT_PAGE_NUMBER) int page,
+                                                       @RequestParam(value = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE) int size);
 }

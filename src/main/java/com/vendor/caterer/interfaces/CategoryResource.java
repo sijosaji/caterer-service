@@ -1,15 +1,13 @@
 package com.vendor.caterer.interfaces;
 
-import com.vendor.caterer.dto.*;
+import com.vendor.caterer.constants.Constants;
+import com.vendor.caterer.dto.CategoryCreateRequest;
+import com.vendor.caterer.dto.CategoryUpdateRequest;
 import com.vendor.caterer.model.Category;
-import com.vendor.caterer.model.CategoryResponse;
-import com.vendor.caterer.model.Caterer;
 import com.vendor.caterer.model.Pagination;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 
@@ -28,6 +26,6 @@ public interface CategoryResource {
     ResponseEntity<Void> deleteCategory(@PathVariable UUID id);
 
     @GetMapping
-    ResponseEntity<Pagination<Category>> getAllCategories(@RequestParam(value = "page", defaultValue = "0") int page,
-                                                    @RequestParam(value = "size", defaultValue = "10") int size);
+    ResponseEntity<Pagination<Category>> getAllCategories(@RequestParam(value = "page", defaultValue = Constants.DEFAULT_PAGE_NUMBER) int page,
+                                                          @RequestParam(value = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE) int size);
 }
