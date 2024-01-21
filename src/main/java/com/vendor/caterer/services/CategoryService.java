@@ -3,19 +3,21 @@ package com.vendor.caterer.services;
 import com.vendor.caterer.dao.CategoryRepository;
 import com.vendor.caterer.dto.CategoryCreateRequest;
 import com.vendor.caterer.dto.CategoryUpdateRequest;
-import com.vendor.caterer.interfaces.CatererMapper;
+import com.vendor.caterer.interfaces.CategoryMapper;
 import com.vendor.caterer.model.Category;
+import com.vendor.caterer.model.Caterer;
+import com.vendor.caterer.model.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,7 +35,7 @@ public class CategoryService {
     }
 
     private Category convertCreateRequestModelToDocModel(CategoryCreateRequest createRequest) {
-        Category category = CatererMapper.mapper.mapCreateRequestToModel(createRequest);
+        Category category = CategoryMapper.mapper.mapCreateRequestToModel(createRequest);
 
         UUID categoryId = UUID.randomUUID();
         category.setId(categoryId);
@@ -44,7 +46,7 @@ public class CategoryService {
     }
 
     private Category convertUpdateRequestModelToDocModel(Category category, CategoryUpdateRequest updateRequest) {
-        Category updatedCaterer = CatererMapper.mapper.mapUpdateRequestToModel(updateRequest, category);
+        Category updatedCaterer = CategoryMapper.mapper.mapUpdateRequestToModel(updateRequest, category);
         updatedCaterer.setLastUpdated(LocalDateTime.now().toString());
         return updatedCaterer;
     }
@@ -76,9 +78,13 @@ public class CategoryService {
         }
     }
 
-    public ResponseEntity<Page<Category>> getAllCategories(int page, int size) {
+    public ResponseEntity<Pagination<Category>> getAllCategories(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Category> categoriesPage = dao.findAll(pageable);
-        return ResponseEntity.ok(categoriesPage);
+        Pagination<Category> response = Pagination.<Category>builder()
+                .data(categoriesPage.getContent())
+                .returnedCount((long) categoriesPage.getNumberOfElements())
+                .limit(categoriesPage.getSize()).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

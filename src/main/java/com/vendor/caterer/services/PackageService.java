@@ -3,9 +3,10 @@ package com.vendor.caterer.services;
 import com.vendor.caterer.dao.PackageRepository;
 import com.vendor.caterer.dto.PackageCreateRequest;
 import com.vendor.caterer.dto.PackageUpdateRequest;
-import com.vendor.caterer.interfaces.CatererMapper;
+import com.vendor.caterer.interfaces.PackageMapper;
 import com.vendor.caterer.model.Category;
 import com.vendor.caterer.model.Package;
+import com.vendor.caterer.model.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,7 @@ import java.util.UUID;
 public class PackageService {
     @Autowired
     private PackageRepository dao;
+
     public ResponseEntity<Package> savePackage(PackageCreateRequest createRequest) {
         Package packageModel = convertCreateRequestModelToDocModel(createRequest);
         dao.save(packageModel);
@@ -29,23 +31,23 @@ public class PackageService {
     }
 
     private Package convertCreateRequestModelToDocModel(PackageCreateRequest createRequest) {
-        Package packageModel = CatererMapper.mapper.mapCreateRequestToModel(createRequest);
+        Package packageModel = PackageMapper.mapper.mapCreateRequestToModel(createRequest);
 
-       UUID packageId = UUID.randomUUID();
-       packageModel.setId(packageId);
+        UUID packageId = UUID.randomUUID();
+        packageModel.setId(packageId);
 
         packageModel.setCreatedOn(LocalDateTime.now().toString());
         packageModel.setLastUpdated(LocalDateTime.now().toString());
-       return packageModel;
+        return packageModel;
     }
 
     private Package convertUpdateRequestModelToDocModel(Package packageModel, PackageUpdateRequest updateRequest) {
-        Package updatedPackage = CatererMapper.mapper.mapUpdateRequestToModel(updateRequest,packageModel);
+        Package updatedPackage = PackageMapper.mapper.mapUpdateRequestToModel(updateRequest, packageModel);
         updatedPackage.setLastUpdated(LocalDateTime.now().toString());
         return updatedPackage;
     }
 
-    public ResponseEntity<Package> getPackage(UUID id){
+    public ResponseEntity<Package> getPackage(UUID id) {
         Optional<Package> packageModel = dao.findById(id);
         return packageModel.map(p -> ResponseEntity.status(HttpStatus.OK).body(p))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -55,7 +57,7 @@ public class PackageService {
         Optional<Package> packageModel = dao.findById(id);
 
         if (packageModel.isPresent()) {
-            Package updatedPackage = convertUpdateRequestModelToDocModel(packageModel.get(),updateRequest);
+            Package updatedPackage = convertUpdateRequestModelToDocModel(packageModel.get(), updateRequest);
             dao.save(updatedPackage);
             return ResponseEntity.status(HttpStatus.OK).body(updatedPackage);
         } else {
@@ -72,9 +74,13 @@ public class PackageService {
         }
     }
 
-    public ResponseEntity<Page<Package>> getAllPackages(int page, int size) {
+    public ResponseEntity<Pagination<Package>> getAllPackages(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Package> packagePage = dao.findAll(pageable);
-        return ResponseEntity.ok(packagePage);
+        Page<Package> packagesPage = dao.findAll(pageable);
+        Pagination<Package> response = Pagination.<Package>builder()
+                .data(packagesPage.getContent())
+                .returnedCount((long) packagesPage.getNumberOfElements())
+                .limit(packagesPage.getSize()).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

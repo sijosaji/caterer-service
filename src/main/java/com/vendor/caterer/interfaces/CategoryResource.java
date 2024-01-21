@@ -28,6 +28,6 @@ public interface CategoryResource {
     ResponseEntity<Void> deleteCategory(@PathVariable UUID id);
 
     @GetMapping
-    ResponseEntity<Page<Category>> getAllCategories(@RequestParam(value = "page", defaultValue = "0") int page,
+    ResponseEntity<Pagination<Category>> getAllCategories(@RequestParam(value = "page", defaultValue = "0") int page,
                                                     @RequestParam(value = "size", defaultValue = "10") int size);
 }

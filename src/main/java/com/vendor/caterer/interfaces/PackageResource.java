@@ -29,6 +29,6 @@ public interface PackageResource {
     ResponseEntity<Void> deletePackage(@PathVariable UUID id);
 
     @GetMapping
-    ResponseEntity<Page<Package>> getAllPackages(@RequestParam(value = "page", defaultValue = "0") int page,
+    ResponseEntity<Pagination<Package>> getAllPackages(@RequestParam(value = "page", defaultValue = "0") int page,
                                                  @RequestParam(value = "size", defaultValue = "10") int size);
 }

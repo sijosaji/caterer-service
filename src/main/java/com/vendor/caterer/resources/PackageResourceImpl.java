@@ -3,11 +3,10 @@ package com.vendor.caterer.resources;
 import com.vendor.caterer.dto.PackageCreateRequest;
 import com.vendor.caterer.dto.PackageUpdateRequest;
 import com.vendor.caterer.interfaces.PackageResource;
-import com.vendor.caterer.model.Category;
 import com.vendor.caterer.model.Package;
+import com.vendor.caterer.model.Pagination;
 import com.vendor.caterer.services.PackageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +37,7 @@ public class PackageResourceImpl implements PackageResource {
     }
 
     @Override
-    public ResponseEntity<Page<Package>> getAllPackages(int page, int size) {
+    public ResponseEntity<Pagination<Package>> getAllPackages(int page, int size) {
         return packageService.getAllPackages(page, size);
     }
 }

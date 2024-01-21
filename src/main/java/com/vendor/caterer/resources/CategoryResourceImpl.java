@@ -1,20 +1,15 @@
 package com.vendor.caterer.resources;
 
-import com.vendor.caterer.dto.*;
+import com.vendor.caterer.dto.CategoryCreateRequest;
+import com.vendor.caterer.dto.CategoryUpdateRequest;
 import com.vendor.caterer.interfaces.CategoryResource;
-import com.vendor.caterer.interfaces.CatererResource;
 import com.vendor.caterer.model.Category;
-import com.vendor.caterer.model.Caterer;
 import com.vendor.caterer.model.Pagination;
 import com.vendor.caterer.services.CategoryService;
-import com.vendor.caterer.services.CatererService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -43,7 +38,7 @@ public class CategoryResourceImpl implements CategoryResource {
     }
 
     @Override
-    public ResponseEntity<Page<Category>> getAllCategories(int page, int size) {
+    public ResponseEntity<Pagination<Category>> getAllCategories(int page, int size) {
         return categoryService.getAllCategories(page, size);
     }
 
