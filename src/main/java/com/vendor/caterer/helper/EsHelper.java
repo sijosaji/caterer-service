@@ -2,12 +2,17 @@ package com.vendor.caterer.helper;
 
 
 
+import co.elastic.clients.elasticsearch._types.FieldSort;
+import co.elastic.clients.elasticsearch._types.SortOptions;
+import co.elastic.clients.elasticsearch._types.SortOptionsBuilders;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
 import co.elastic.clients.json.JsonData;
 import com.vendor.caterer.enums.LogicalOperator;
 import com.vendor.caterer.enums.Operator;
+import com.vendor.caterer.model.EsFieldSort;
 import com.vendor.caterer.model.Filter;
 import com.vendor.caterer.model.Node;
 
@@ -67,5 +72,12 @@ public class EsHelper {
         } else {
             return null;
         }
+    }
+
+    public List<SortOptions> buildSortCriteria(List<EsFieldSort> esFieldSortList) {
+        //TODO : Add support to GeoDistance sorting
+        return esFieldSortList.stream().map(esFieldSort -> new SortOptions.Builder().field(SortOptionsBuilders.field().field(esFieldSort.getFieldIdentifier())
+                .order(SortOrder.valueOf(esFieldSort.getSortDirection().toString())).build()).build()).toList();
+
     }
 }

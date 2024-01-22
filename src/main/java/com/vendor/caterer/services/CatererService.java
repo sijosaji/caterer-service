@@ -1,5 +1,6 @@
 package com.vendor.caterer.services;
 
+import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import com.vendor.caterer.dao.CatererRepository;
 import com.vendor.caterer.dto.CatererCreateRequest;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -91,7 +93,8 @@ public class CatererService {
 
     public Pagination<Caterer> getCaterers(SearchRequest searchRequest) {
         Query query = esHelper.getEsQuery(searchRequest.getNode());
-        NativeQuery nativeQuery = new NativeQuery(new NativeQueryBuilder().withQuery(query));
+        List<SortOptions> sortOrderList = esHelper.buildSortCriteria(searchRequest.getEsFieldSortList());
+        NativeQuery nativeQuery = new NativeQuery(new NativeQueryBuilder().withQuery(query).withSort(sortOrderList));
         nativeQuery.setPageable(PageRequest.of(searchRequest.getOffset(), searchRequest.getLimit()));
         SearchHits<Caterer> searchHits = elasticsearchOperations.search(nativeQuery, Caterer.class);
         return Pagination.<Caterer>builder().data(searchHits.getSearchHits().stream().map(SearchHit::getContent).toList())
