@@ -2,21 +2,15 @@ package com.vendor.caterer.helper;
 
 
 
-import co.elastic.clients.elasticsearch._types.FieldSort;
-import co.elastic.clients.elasticsearch._types.SortOptions;
-import co.elastic.clients.elasticsearch._types.SortOptionsBuilders;
-import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.*;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
 import co.elastic.clients.json.JsonData;
 import com.vendor.caterer.enums.LogicalOperator;
 import com.vendor.caterer.enums.Operator;
-import com.vendor.caterer.model.EsFieldSort;
-import com.vendor.caterer.model.Filter;
-import com.vendor.caterer.model.Node;
+import com.vendor.caterer.model.*;
 
-import com.vendor.caterer.model.Rule;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -74,10 +68,28 @@ public class EsHelper {
         }
     }
 
-    public List<SortOptions> buildSortCriteria(List<EsFieldSort> esFieldSortList) {
-        //TODO : Add support to GeoDistance sorting
-        return esFieldSortList.stream().map(esFieldSort -> new SortOptions.Builder().field(SortOptionsBuilders.field().field(esFieldSort.getFieldIdentifier())
-                .order(SortOrder.valueOf(esFieldSort.getSortDirection().toString())).build()).build()).toList();
+    public List<SortOptions> buildSortCriteria(List<EsFieldsSort> esFieldSortList) {
+
+        return esFieldSortList.stream().map(esFieldSort -> {
+                if (esFieldSortList instanceof GeoLocationSort geoLocationSort) {
+                    return new SortOptions.Builder().geoDistance(SortOptionsBuilders.geoDistance()
+                            .field(geoLocationSort.getFieldIdentifier())
+                            .order(geoLocationSort.getSortDirection())
+                            .distanceType(GeoDistanceType.Plane)
+                            .unit(DistanceUnit.Kilometers)
+                            .location(List.of(new GeoLocation.Builder()
+                                    .latlon(new LatLonGeoLocation.Builder()
+                                            .lat(geoLocationSort.getLatitude())
+                                            .lon(geoLocationSort.getLongitude())
+                                            .build())
+                                    .build()))
+                            .build())
+                            .build();
+        }
+
+        return new SortOptions.Builder().field(SortOptionsBuilders.field().field(esFieldSort.getFieldIdentifier())
+                .order(SortOrder.valueOf(esFieldSort.getSortDirection().toString())).build()).build();
+        }).toList();
 
     }
 }
