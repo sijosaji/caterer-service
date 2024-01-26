@@ -1,5 +1,6 @@
 package com.vendor.caterer.model;
 
+import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.math.BigDecimal;
@@ -7,8 +8,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-@Document(indexName = "food-item")
-public class FoodItem {
+@Data
+@Document(indexName = "menu-item")
+public class MenuItem {
     private UUID id;
     private String name;
     private String description;
@@ -17,6 +19,9 @@ public class FoodItem {
     private boolean isDrink;
     private String imageUrl;
     private List<String> tags;
+    private UUID catererId;
     private Set<UUID> categoryIds;
     private Set<UUID> packageCategoryIds;
+    private String createdOn;
+    private String lastUpdated;
 }

@@ -8,5 +8,5 @@ public class CategoryResponse {
     private UUID categoryId;
     private String name;
     private String description;
-    private List<FoodItem> foodItems;
+    private List<MenuItem> menuItems;
 }

@@ -50,8 +50,8 @@ public class CategoryService {
     }
 
     public ResponseEntity<Category> getCaterer(UUID id) {
-        Optional<Category> restaurant = dao.findById(id);
-        return restaurant.map(category -> ResponseEntity.status(HttpStatus.OK).body(category))
+        Optional<Category> category = dao.findById(id);
+        return category.map(cat -> ResponseEntity.status(HttpStatus.OK).body(cat))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
