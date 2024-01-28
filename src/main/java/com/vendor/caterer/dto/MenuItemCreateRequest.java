@@ -1,22 +1,29 @@
-package com.vendor.caterer.model;
+package com.vendor.caterer.dto;
 
-import org.springframework.data.elasticsearch.annotations.Document;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-@Document(indexName = "food-item")
-public class FoodItem {
-    private UUID id;
+@Data
+public class MenuItemCreateRequest {
+    @NotEmpty
     private String name;
+    @NotEmpty
     private String description;
+    @NotNull
     private BigDecimal price;
+    @NotNull
     private boolean isVeg;
+    @NotNull
     private boolean isDrink;
     private String imageUrl;
-    private List<String> tags;
+    private UUID catererId;
+    private Set<UUID> tags;
+    @NotNull
     private Set<UUID> categoryIds;
     private Set<UUID> packageCategoryIds;
 }

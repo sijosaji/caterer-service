@@ -3,7 +3,7 @@ package com.vendor.caterer.services;
 import com.vendor.caterer.dao.CategoryRepository;
 import com.vendor.caterer.dto.CategoryCreateRequest;
 import com.vendor.caterer.dto.CategoryUpdateRequest;
-import com.vendor.caterer.interfaces.CategoryMapper;
+import com.vendor.caterer.mapper.CategoryMapper;
 import com.vendor.caterer.model.Category;
 import com.vendor.caterer.model.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +50,8 @@ public class CategoryService {
     }
 
     public ResponseEntity<Category> getCaterer(UUID id) {
-        Optional<Category> restaurant = dao.findById(id);
-        return restaurant.map(category -> ResponseEntity.status(HttpStatus.OK).body(category))
+        Optional<Category> category = dao.findById(id);
+        return category.map(cat -> ResponseEntity.status(HttpStatus.OK).body(cat))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 

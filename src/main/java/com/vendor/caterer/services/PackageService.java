@@ -3,7 +3,7 @@ package com.vendor.caterer.services;
 import com.vendor.caterer.dao.PackageRepository;
 import com.vendor.caterer.dto.PackageCreateRequest;
 import com.vendor.caterer.dto.PackageUpdateRequest;
-import com.vendor.caterer.interfaces.PackageMapper;
+import com.vendor.caterer.mapper.PackageMapper;
 import com.vendor.caterer.model.Package;
 import com.vendor.caterer.model.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;

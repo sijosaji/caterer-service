@@ -14,7 +14,7 @@ import java.util.UUID;
 @RequestMapping("v1/caterers")
 public interface CatererResource {
     @PostMapping
-    ResponseEntity addCaterer(@RequestBody CatererCreateRequest createRequest);
+    ResponseEntity<Caterer> addCaterer(@RequestBody CatererCreateRequest createRequest);
 
     @GetMapping("/{id}")
     ResponseEntity<Caterer> getCaterer(@PathVariable UUID id);
@@ -24,6 +24,7 @@ public interface CatererResource {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteCaterer(@PathVariable UUID id);
+
     @PostMapping("search")
     Pagination<Caterer> getCaterers(@RequestBody SearchRequest searchRequest);
 }
