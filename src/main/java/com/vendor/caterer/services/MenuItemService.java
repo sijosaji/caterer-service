@@ -1,10 +1,11 @@
 package com.vendor.caterer.services;
 
 import com.vendor.caterer.dao.MenuItemRepository;
+import com.vendor.caterer.dto.MenuItemAssignment;
 import com.vendor.caterer.dto.MenuItemCreateRequest;
 import com.vendor.caterer.dto.MenuItemUpdateRequest;
-import com.vendor.caterer.helper.CollectionUtils;
-import com.vendor.caterer.interfaces.MenuItemMapper;
+import com.vendor.caterer.enums.Operation;
+import com.vendor.caterer.mapper.MenuItemMapper;
 import com.vendor.caterer.model.MenuItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -52,50 +54,37 @@ public class MenuItemService {
     }
 
     private MenuItem convertUpdateRequestModelToDocModel(MenuItem menuItem, MenuItemUpdateRequest updateRequest) {
-        //MenuItem updatedMenuItem = MenuItemMapper.mapper.mapUpdateRequestToModel(updateRequest, menuItem);
-        if (updateRequest == null) {
-            return menuItem;
-        }
-        if (updateRequest.getName() != null) {
-            menuItem.setName(updateRequest.getName());
-        }
-        if (updateRequest.getDescription() != null) {
-            menuItem.setDescription(updateRequest.getDescription());
-        }
-        if (updateRequest.getPrice() != null) {
-            menuItem.setPrice(updateRequest.getPrice());
-        }
-        if (updateRequest.getImageUrl() != null) {
-            menuItem.setImageUrl(updateRequest.getImageUrl());
-        }
-        menuItem.setVeg(updateRequest.isVeg());
-        menuItem.setDrink(updateRequest.isDrink());
+        MenuItem updatedMenuItem = MenuItemMapper.mapper.mapUpdateRequestToModel(updateRequest, menuItem);
 
-        //handle tags
-        if (CollectionUtils.isNotEmpty(updateRequest.getTagsToAdd())) {
-            menuItem.getTags().addAll(updateRequest.getTagsToAdd());
-        }
-        if (CollectionUtils.isNotEmpty(updateRequest.getTagsToRemove())) {
-            menuItem.getTags().removeAll(updateRequest.getTagsToRemove());
-        }
+        //To handle category ids, package category ids, and tags ids
+        handleAssignmentUpdates(updatedMenuItem, updateRequest);
+        updatedMenuItem.setLastUpdated(LocalDateTime.now().toString());
+        return updatedMenuItem;
+    }
 
-        //handle category ids
-        if (CollectionUtils.isNotEmpty(updateRequest.getCategoryIdsToAdd())) {
-            menuItem.getCategoryIds().addAll(updateRequest.getCategoryIdsToAdd());
-        }
-        if (CollectionUtils.isNotEmpty(updateRequest.getCategoryIdsToRemove())) {
-            menuItem.getCategoryIds().removeAll(updateRequest.getCategoryIdsToRemove());
-        }
+    private void handleAssignmentUpdates(MenuItem menuItem, MenuItemUpdateRequest updateRequest) {
+        // Process all updates and do operations based on the type
+        updateRequest.getAssignmentUpdates().forEach(update -> {
+            switch (update.getType()) {
+                case TAGS:
+                    addOrRemoveElements(menuItem.getTags(), update);
+                    break;
+                case CATEGORY:
+                    addOrRemoveElements(menuItem.getCategoryIds(), update);
+                    break;
+                case PACKAGE_CATEGORY:
+                    addOrRemoveElements(menuItem.getPackageCategoryIds(), update);
+                    break;
+            }
+        });
+    }
 
-        //handle package category ids
-        if (CollectionUtils.isNotEmpty(updateRequest.getPackageCategoryIdsToAdd())) {
-            menuItem.getPackageCategoryIds().addAll(updateRequest.getPackageCategoryIdsToAdd());
+    private void addOrRemoveElements(Collection<UUID> collection, MenuItemAssignment update) {
+        if (update.getOperation().equals(Operation.ADD)) {
+            collection.addAll(update.getIds());
+        } else if (update.getOperation().equals(Operation.REMOVE)) {
+            collection.removeAll(update.getIds());
         }
-        if (CollectionUtils.isNotEmpty(updateRequest.getPackageCategoryIdsToRemove())) {
-            menuItem.getPackageCategoryIds().removeAll(updateRequest.getPackageCategoryIdsToRemove());
-        }
-        menuItem.setLastUpdated(LocalDateTime.now().toString());
-        return menuItem;
     }
 
     public ResponseEntity<MenuItem> getMenuItem(UUID id) {

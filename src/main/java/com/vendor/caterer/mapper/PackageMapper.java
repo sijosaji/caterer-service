@@ -1,4 +1,4 @@
-package com.vendor.caterer.interfaces;
+package com.vendor.caterer.mapper;
 
 import com.vendor.caterer.dto.PackageCreateRequest;
 import com.vendor.caterer.dto.PackageUpdateRequest;
@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface PackageMapper {
+
     PackageMapper mapper = Mappers.getMapper(PackageMapper.class);
     Package mapCreateRequestToModel(PackageCreateRequest createRequest);
     Package mapUpdateRequestToModel(PackageUpdateRequest dto, @MappingTarget Package entity);

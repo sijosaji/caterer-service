@@ -7,7 +7,7 @@ import com.vendor.caterer.dto.CatererCreateRequest;
 import com.vendor.caterer.dto.CatererUpdateRequest;
 import com.vendor.caterer.dto.SearchRequest;
 import com.vendor.caterer.helper.EsHelper;
-import com.vendor.caterer.interfaces.CatererMapper;
+import com.vendor.caterer.mapper.CatererMapper;
 import com.vendor.caterer.model.Caterer;
 import com.vendor.caterer.model.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.vendor.caterer.interfaces;
+package com.vendor.caterer.mapper;
 
 import com.vendor.caterer.dto.CatererCreateRequest;
 import com.vendor.caterer.dto.CatererUpdateRequest;

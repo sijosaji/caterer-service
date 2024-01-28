@@ -4,7 +4,6 @@ import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,8 +17,8 @@ public class MenuItem {
     private boolean isVeg;
     private boolean isDrink;
     private String imageUrl;
-    private List<String> tags;
     private UUID catererId;
+    private Set<UUID> tags;
     private Set<UUID> categoryIds;
     private Set<UUID> packageCategoryIds;
     private String createdOn;
