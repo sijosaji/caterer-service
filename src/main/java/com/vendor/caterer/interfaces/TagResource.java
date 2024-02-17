@@ -1,7 +1,6 @@
 package com.vendor.caterer.interfaces;
 
 import com.vendor.caterer.constants.Constants;
-import com.vendor.caterer.dto.CategoryUpdateRequest;
 import com.vendor.caterer.dto.TagCreateRequest;
 import com.vendor.caterer.dto.TagUpdateRequest;
 import com.vendor.caterer.model.Pagination;
