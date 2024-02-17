@@ -39,16 +39,36 @@ public class TagResourceImpl implements TagResource {
         return tagService.getTag(id);
     }
 
+    /**
+     * Updates an existing Tag object with the provided details.
+     *
+     * @param id The UUID of the tag to be updated.
+     * @param updateRequest The request object containing the new details of the tag.
+     * @return A ResponseEntity containing the updated Tag object, or an error message if the tag could not be updated.
+     */
     @Override
     public ResponseEntity<Tag> updateTag(UUID id, TagUpdateRequest updateRequest) {
         return tagService.updateTag(id, updateRequest);
     }
 
+    /**
+     * Deletes a Tag object based on the provided UUID.
+     *
+     * @param id The UUID of the tag to be deleted.
+     * @return A ResponseEntity containing a success message if the tag was deleted, or an error message if the tag could not be found.
+     */
     @Override
     public ResponseEntity<Void> deleteTag(UUID id) {
        return tagService.deleteTag(id);
     }
 
+    /**
+     * Retrieves a list of all Tag objects.
+     *
+     * @param page The page number of the results to be retrieved.
+     * @param size The number of results to be retrieved per page.
+     * @return A ResponseEntity containing a Pagination object containing the list of Tag objects, or an error message if the tags could not be retrieved.
+     */
     @Override
     public ResponseEntity<Pagination<Tag>> getAllTags(int page, int size) {
         return tagService.getAllTags(page, size);
