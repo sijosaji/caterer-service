@@ -51,7 +51,6 @@ public class TagResourceImpl implements TagResource {
 
     @Override
     public ResponseEntity<Pagination<Tag>> getAllTags(int page, int size) {
-        // TODO Auto-generated method stub
         return tagService.getAllTags(page, size);
     }
     

@@ -14,7 +14,6 @@ import com.vendor.caterer.dao.TagRepository;
 import com.vendor.caterer.dto.TagCreateRequest;
 import com.vendor.caterer.dto.TagUpdateRequest;
 import com.vendor.caterer.mapper.TagMapper;
-import com.vendor.caterer.model.Category;
 import com.vendor.caterer.model.Pagination;
 import com.vendor.caterer.model.Tag;
 
@@ -29,9 +28,9 @@ public class TagService {
     public ResponseEntity<Tag> saveTag(TagCreateRequest createRequest) {
         Tag tag = TagMapper.mapper.mapCreateRequestToModel(createRequest);
         tag.setId(UUID.randomUUID());
-        tagRepository.save(tag);
         tag.setCreatedOn(LocalDateTime.now().toString());
         tag.setLastUpdated(LocalDateTime.now().toString());
+        tagRepository.save(tag);
         return ResponseEntity.ok(tag);
     }
 
