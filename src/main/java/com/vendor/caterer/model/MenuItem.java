@@ -20,7 +20,6 @@ public class MenuItem {
     private UUID catererId;
     private Set<UUID> tags;
     private Set<UUID> categoryIds;
-    private Set<UUID> packageCategoryIds;
     private String createdOn;
     private String lastUpdated;
 }

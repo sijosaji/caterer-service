@@ -6,8 +6,11 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface CategoryRepository extends MongoRepository<Category, UUID> {
+
+    List<Category> findAllByPackageId(UUID packageId);
 }

@@ -1,6 +1,7 @@
 package com.vendor.caterer.interfaces;
 
 import com.vendor.caterer.constants.Constants;
+import com.vendor.caterer.dto.PackageCopyRequest;
 import com.vendor.caterer.dto.PackageCreateRequest;
 import com.vendor.caterer.dto.PackageUpdateRequest;
 import com.vendor.caterer.model.Package;
@@ -28,4 +29,7 @@ public interface PackageResource {
     @GetMapping
     ResponseEntity<Pagination<Package>> getAllPackages(@RequestParam(value = "page", defaultValue = Constants.DEFAULT_PAGE_NUMBER) int page,
                                                        @RequestParam(value = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE) int size);
+
+    @PostMapping("/copy/{id}")
+    ResponseEntity<Package> copyPackage(@PathVariable UUID id,@RequestBody PackageCopyRequest copyRequest);
 }

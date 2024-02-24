@@ -1,5 +1,6 @@
 package com.vendor.caterer.resources;
 
+import com.vendor.caterer.dto.PackageCopyRequest;
 import com.vendor.caterer.dto.PackageCreateRequest;
 import com.vendor.caterer.dto.PackageUpdateRequest;
 import com.vendor.caterer.interfaces.PackageResource;
@@ -39,5 +40,10 @@ public class PackageResourceImpl implements PackageResource {
     @Override
     public ResponseEntity<Pagination<Package>> getAllPackages(int page, int size) {
         return packageService.getAllPackages(page, size);
+    }
+
+    @Override
+    public ResponseEntity<Package> copyPackage(UUID id,PackageCopyRequest copyRequest) {
+        return packageService.copyPackage(id,copyRequest);
     }
 }
