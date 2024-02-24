@@ -1,11 +1,10 @@
 package com.vendor.caterer.model;
 
+import com.vendor.caterer.enums.CategoryType;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.WriteTypeHint;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -19,5 +18,6 @@ public class Category {
     private UUID catererId;
     private String createdOn;
     private String lastUpdated;
-
+    private CategoryType type;
+    private UUID packageId;
 }

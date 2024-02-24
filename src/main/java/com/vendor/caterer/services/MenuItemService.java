@@ -72,9 +72,9 @@ public class MenuItemService {
                 case CATEGORY:
                     addOrRemoveElements(menuItem.getCategoryIds(), update);
                     break;
-                case PACKAGE_CATEGORY:
-                    addOrRemoveElements(menuItem.getPackageCategoryIds(), update);
-                    break;
+//                case PACKAGE_CATEGORY:
+//                    addOrRemoveElements(menuItem.getPackageCategoryIds(), update);
+//                    break;
             }
         });
     }
